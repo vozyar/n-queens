@@ -79,14 +79,26 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+       var accumulator = 0; // calculates the value in the row
+       var row = this.get(rowIndex); // it goes to the specific row
+       for (var i = 0; i < row.length; i++ ) { //it goes thru for each value
+          accumulator += row[i] // it add them together
+          if (accumulator > 1) { // that means there are two 1 or means 2 queens.
+            return true;
+          }
+       }
+      return false; 
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      for (var i = 0; i < this.get('n'); i++) { // we have nxn matrix and it allows us to calculate 
+        if (this.hasRowConflictAt(i) === true) {
+          return true;
+        }
+      }
+      return false; 
     },
-
 
 
     // COLUMNS - run from top to bottom
@@ -94,11 +106,24 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var accumulator = 0;
+      for (var i = 0; i < this.get('n'); i++) { // this.get('') because it is a property
+        var row =this.get(i); // it allows us to go to a row i
+        accumulator += this.get(i)[colIndex] // it grabs the the row i columnIndex which is the index that we are targeting
+        if (accumulator > 1) {
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
+      for (var i = 0; i < this.get('n'); i++) {
+        if (this.hasColConflictAt(i) === true) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -108,12 +133,29 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
+    // it goes from top left to bottom right
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var n = this.get('n')
+      var colI = (majorDiagonalColumnIndexAtFirstRow > 0 ) ? majorDiagonalColumnIndexAtFirstRow : 0
+      var rowI = (majorDiagonalColumnIndexAtFirstRow > 0 ) ? 0 : - majorDiagonalColumnIndexAtFirstRow
+      var accumulator = 0
+      for (colI,rowI ; rowI < n && colI < n ; colI++,rowI++) {// cool way to do a for loop.
+        accumulator += this.get(rowI)[colI];
+        if (accumulator > 1) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var n = this.get('n')
+      for (var i = -(n-1); i < (n-1); i++ ) {
+        if (this.hasMajorDiagonalConflictAt(i) === true){
+          return true;
+        }
+      }
       return false; // fixme
     },
 
@@ -124,12 +166,28 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      var n = this.get('n');
+      var rowI = (minorDiagonalColumnIndexAtFirstRow < n) ? 0 : minorDiagonalColumnIndexAtFirstRow - (n-1)
+      var colI = (minorDiagonalColumnIndexAtFirstRow < n) ? minorDiagonalColumnIndexAtFirstRow : (n-1)
+      var accumulator = 0;
+      for (colI,rowI; colI >= 0 && rowI <= (n-1); colI--,rowI++) {
+        accumulator += this.get(rowI)[colI];
+        if (accumulator > 1) {
+          return true;
+        }
+      }
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var n = this.get('n');
+      for (var i = 0; i <= 2*n-2; i++) {
+        if (this.hasMinorDiagonalConflictAt(i) === true) {
+          return true;
+        }
+      }
+      return false; 
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
